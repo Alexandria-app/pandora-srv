@@ -1,0 +1,166 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows: [ "tests" ]
+    branches: [ main, beta ]
+    types:
+      - completed
+      - requested
+permissions:
+  contents: read
+
+jobs:
+  tag-release:
+    name: tag-release
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+      - name: install plugins
+        run: npm install @semantic-release/git @semantic-release/changelog -D
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+  build-linux-android-web:
+    name: build-linux-android-web
+    runs-on: ubuntu-latest
+    needs:
+      - tag-release
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 'Get tag'
+        id: tagName
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.2'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: build linux distributable
+        run: dart run serious_python:main package --asset assets/pandora_linux_${{ steps.tagName.outputs.tag }}.zip app/
+
+      - name: build android distributable
+        run: dart run serious_python:main package --asset assets/pandora_android_${{ steps.tagName.outputs.tag }}.zip app/ --mobile
+
+      - name: build web distributable
+        run: dart run serious_python:main package --asset assets/pandora_web_${{ steps.tagName.outputs.tag }}.zip app/ --web
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            assets/pandora_linux_${{ steps.tagName.outputs.tag }}.zip
+            assets/pandora_android_${{ steps.tagName.outputs.tag }}.zip
+            assets/pandora_web_${{ steps.tagName.outputs.tag }}.zip
+          tag_name: ${{ steps.tagName.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-windows:
+    name: build-windows
+    runs-on: windows-latest
+    needs:
+      - tag-release
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 'Get tag'
+        id: tagName
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.2'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: build windows distributable
+        run: dart run serious_python:main package --asset assets/pandora_windows_${{ steps.tagName.outputs.tag }}.zip app/
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            assets/pandora_windows_${{ steps.tagName.outputs.tag }}.zip
+          tag_name: ${{ steps.tagName.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos-ios:
+    name: build-macos-ios
+    runs-on: macos-latest
+    needs:
+      - tag-release
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 'Get tag'
+        id: tagName
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.2'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: build macos distributable
+        run: dart run serious_python:main package --asset assets/pandora_macos_${{ steps.tagName.outputs.tag }}.zip app/
+
+      - name: build ios distributable
+        run: dart run serious_python:main package --asset assets/pandora_ios_${{ steps.tagName.outputs.tag }}.zip app/ --mobile
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            assets/pandora_macos_${{ steps.tagName.outputs.tag }}.zip
+            assets/pandora_ios_${{ steps.tagName.outputs.tag }}.zip
+          tag_name: ${{ steps.tagName.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

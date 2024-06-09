@@ -1,0 +1,43 @@
+name: tests
+on:
+  push:
+    branches:
+      - main
+      - beta
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  run-tests:
+    name: run tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        working-directory: ./app
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+          pip install ruff
+      
+      - name: linter
+        run: ruff check
+        working-directory: ./app
+
+      - name: Run Tests
+        run: python -m unittest discover -s tests/
