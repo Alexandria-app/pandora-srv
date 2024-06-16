@@ -48,8 +48,8 @@ def search_page():
         return jsonify({'error': 'Script manager not loaded'}), 404
 
     # Access query parameters
-    query = request.args.get('query')  # Single parameter
-    page = request.args.get('page', default=1, type=int)  # Single parameter with a default value and type
+    # query = request.args.get('query')  # Single parameter
+    # page = request.args.get('page', default=1, type=int)  # Single parameter with a default value and type
 
     # todo
     return jsonify({'error': 'unimplemented'}), 404
