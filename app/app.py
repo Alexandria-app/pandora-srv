@@ -58,12 +58,12 @@ def search_page():
 
 
 # app route for getting more info
-@app.route('/script/info', methods=['GET'])
-def search_page():
-    if not script_manager.is_loaded():
-        return jsonify({'error': 'Script manager not loaded'}), 404
-    return jsonify({'error': 'unimplemented'}), 404
-    # return jsonify(script_manager.get_home_page()), 200
+# @app.route('/script/info', methods=['GET'])
+# def search_page():
+#     if not script_manager.is_loaded():
+#         return jsonify({'error': 'Script manager not loaded'}), 404
+#     return jsonify({'error': 'unimplemented'}), 404
+#     # return jsonify(script_manager.get_home_page()), 200
 
 
 # lmao this kills the app leaving this here, so you don't try that again
