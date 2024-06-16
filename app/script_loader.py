@@ -39,7 +39,6 @@ class ScriptLoader:
             sys.modules[module_name] = self.__module
             spec.loader.exec_module(self.__module)
             return True, ''
-
         except Exception as e:
             print(f'Error: {e}')
             return False, str(e)
@@ -48,6 +47,7 @@ class ScriptLoader:
         self.__module = None
 
     def get_home_page(self):
-        module = self.__module
-        res = module.home_page('https://www.google.com')
-        return res
+        try:
+            return True, self.__module.home_page()
+        except Exception as e:
+            return False, str(e)
