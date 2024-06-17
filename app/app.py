@@ -66,10 +66,8 @@ def search_page():
 #         return jsonify({'error': 'Script manager not loaded'}), 404
 #     return jsonify({'error': 'unimplemented'}), 404
 #     # return jsonify(script_manager.get_home_page()), 200
-def main():
+
+if os.getenv('DEV_ENV') is None:
     print("Starting server")
     serve(app, host="0.0.0.0", port=port)
 
-
-if os.getenv('dev') is not None:
-    main()
