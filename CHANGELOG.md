@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/Alexandria-app/pandora-srv/compare/v1.0.1...v1.1.0) (2024-06-17)
+
+
+### Bug Fixes
+
+* removed tests for now ([e9baea6](https://github.com/Alexandria-app/pandora-srv/commit/e9baea6cc76d8865767d4c4332b73a2326c62bed))
+
+
+### Features
+
+* changed import verifier ([c5d0d05](https://github.com/Alexandria-app/pandora-srv/commit/c5d0d0527a928da49498e3ee1d977acde04825cf))
+
 ## [1.0.1](https://github.com/Alexandria-app/pandora-srv/compare/v1.0.0...v1.0.1) (2024-06-16)
 
 
