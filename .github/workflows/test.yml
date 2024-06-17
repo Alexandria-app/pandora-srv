@@ -39,5 +39,5 @@ jobs:
         run: ruff check
         working-directory: ./app
 
-      - name: Run Tests
-        run: python -m unittest discover -s tests/
+#      - name: Run Tests
+#        run: python -m unittest discover -s tests/

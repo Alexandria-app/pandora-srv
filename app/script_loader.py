@@ -4,7 +4,7 @@ import sys
 
 
 def verify_imports(script_path):
-    allowed_modules = {'requests', 'json'}
+    allowed_modules = {'requests', 'json', 'datetime', 'pytube'}
 
     with open(script_path, 'r') as file:
         tree = ast.parse(file.read())
@@ -17,7 +17,7 @@ def verify_imports(script_path):
         elif isinstance(node, ast.ImportFrom):
             module = node.module if node.module else ''
             for alias in node.names:
-                imports.add(module + '.' + alias.name)
+                imports.add(module)
 
     result = imports - allowed_modules
 
@@ -48,6 +48,6 @@ class ScriptLoader:
 
     def get_home_page(self):
         try:
-            return True, self.__module.home_page()
+            return True, self.__module.home()
         except Exception as e:
             return False, str(e)
