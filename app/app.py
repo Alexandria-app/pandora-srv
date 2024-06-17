@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, jsonify, request
 from waitress import serve
 
@@ -69,5 +71,5 @@ def main():
     serve(app, host="0.0.0.0", port=port)
 
 
-if __name__ == '__main__':
+if os.getenv('dev') is not None:
     main()
