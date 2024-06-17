@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/Alexandria-app/pandora-srv/compare/v1.1.0...v1.1.1) (2024-06-17)
+
+
+### Bug Fixes
+
+* added condition for development ([dc914a4](https://github.com/Alexandria-app/pandora-srv/commit/dc914a43f253dc82156c7079e9b232e0511fa3c1))
+
 # [1.1.0](https://github.com/Alexandria-app/pandora-srv/compare/v1.0.1...v1.1.0) (2024-06-17)
 
 
