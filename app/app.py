@@ -64,15 +64,10 @@ def search_page():
 #         return jsonify({'error': 'Script manager not loaded'}), 404
 #     return jsonify({'error': 'unimplemented'}), 404
 #     # return jsonify(script_manager.get_home_page()), 200
+def main():
+    print("Starting server")
+    serve(app, host="0.0.0.0", port=port)
 
 
-# lmao this kills the app leaving this here, so you don't try that again
-# @app.route("/quit", methods=['GET'])
-# def quit_script():
-#     os.kill(os.getpid(), signal.SIGTERM)
-#     return None
-
-# script specific commands
-
-
-serve(app, host="0.0.0.0", port=port)
+if __name__ == '__main__':
+    main()
